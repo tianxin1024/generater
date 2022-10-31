@@ -5,6 +5,8 @@ from src import Build
 from torchsummary import summary
 from src import config
 
+from export import export
+
 
 model_names = models.__all__
 
@@ -81,11 +83,16 @@ if __name__ == "__main__":
         args.INPUT_W = 640
 
     model.eval()
-    import ipdb; ipdb.set_trace()
     model = model.to("cuda:0")
-    # input_var = torch.ones([1, 3, 224, 224])
+    input_var = torch.ones([1, 3, 224, 224]).to("cuda:0")
+
+    output = model(input_var)
+
+    data = export(input_var, output)
+
+    data.run()
 
     # summary(model, (input_var.shape[1], input_var.shape[2], input_var.shape[3]))
 
-    builder = Build(model.to("cuda:0"), input_var.to("cuda:0"))
-    builder.build()
+    # builder = Build(model.to("cuda:0"), input_var.to("cuda:0"))
+    # builder.build()
